@@ -48,9 +48,10 @@ class DimService : Service() {
         // jadi level dibatasi maksimum 80.
         val alpha = level.coerceIn(0, MAX_LEVEL) / 100f
 
-        val view = overlay ?: View(this).apply {
-            setBackgroundColor(Color.BLACK)
-            overlay = this
+        var view = overlay
+        if (view == null) {
+            view = View(this)
+            view.setBackgroundColor(Color.BLACK)
             val lp = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.MATCH_PARENT,
@@ -61,7 +62,8 @@ class DimService : Service() {
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 PixelFormat.TRANSLUCENT
             )
-            wm.addView(this, lp)
+            wm.addView(view, lp)
+            overlay = view
         }
         view.alpha = alpha
     }
